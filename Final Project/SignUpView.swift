@@ -39,6 +39,25 @@ class SignUpView: UIView {
         addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        emailTextBox.layer.borderWidth = 1
+        emailTextBox.layer.borderColor = UIColor.red.cgColor
+        emailTextBox.layer.cornerRadius = 5
+    }
+    
+    func checkEmail() -> Bool {
+        if !(emailTextBox.text?.isEmpty ?? true) {
+            if let emailString = emailTextBox.text {
+                let range = NSRange(location: 0, length: emailString.count)
+                
+                let regex = try! NSRegularExpression(pattern: "@")
+                
+                if regex.firstMatch(in: emailString, options: [], range: range) != nil {
+                    return true
+                }
+            }
+        }
+        return false
     }
     
     @IBAction func signUpPressed(_ sender: Any) {
@@ -47,5 +66,14 @@ class SignUpView: UIView {
     
     @IBAction func goToLoginPressed(_ sender: Any) {
         delegate?.goToLoginView()
+    }
+    @IBAction func emailValueChange(_ sender: Any) {
+        print("test email")
+        if checkEmail() {
+            emailTextBox.layer.borderColor = UIColor.black.cgColor
+        }
+        else {
+            emailTextBox.layer.borderColor = UIColor.red.cgColor
+        }
     }
 }

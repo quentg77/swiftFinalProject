@@ -57,9 +57,12 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="ESZ-fU-fSQ"/>
                     </constraints>
-                    <nil key="textColor"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" textContentType="email"/>
+                    <connections>
+                        <action selector="emailValueChange:" destination="-1" eventType="editingChanged" id="4Oz-5U-nmv"/>
+                    </connections>
                 </textField>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AdH-xn-XzD">
                     <rect key="frame" x="16" y="164" width="341" height="32"/>

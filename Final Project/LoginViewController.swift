@@ -94,7 +94,7 @@ class LoginViewController: UIViewController, SignInViewDelegate, SignUpViewDeleg
     }
     
     func onSignUpPressed() {
-        if !(signUpView.emailTextBox.text?.isEmpty ?? true) && !(signUpView.passwordTextBox.text?.isEmpty ?? true) && !(signUpView.confirmPasswordTextBox.text?.isEmpty ?? true) {
+        if signUpView.checkEmail() && !(signUpView.passwordTextBox.text?.isEmpty ?? true) && !(signUpView.confirmPasswordTextBox.text?.isEmpty ?? true) {
             if signUpView.passwordTextBox.text == signUpView.confirmPasswordTextBox.text {
                 RegisterUser.instance.setUser(newUser: User(email: signUpView.emailTextBox.text ?? "nil", password: signUpView.passwordTextBox.text ?? "nil"))
                 showAlert(alertMessage: "Successful sign up")
