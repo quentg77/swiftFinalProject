@@ -55,6 +55,7 @@ class LoginViewController: UIViewController, SignInViewDelegate, SignUpViewDeleg
     @IBOutlet weak var signUpView: SignUpView!
     @IBOutlet weak var signInView: SignInView!
     @IBOutlet weak var profilView: ProfilView!
+    @IBOutlet weak var alertLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,10 +65,15 @@ class LoginViewController: UIViewController, SignInViewDelegate, SignUpViewDeleg
         profilView.delegate = self
         signUpView.isHidden = true
         profilView.isHidden = true
+        
+        alertLabel.layer.masksToBounds = true
+        alertLabel.layer.cornerRadius = 25
+        alertLabel.isHidden = true
     }
     
     func onLoginPressed() {
         if RegisterUser.instance.isUserNil() {
+            showAlert(alertMessage: "Please register first")
             print("Please register first")
             return
         }
@@ -78,10 +84,12 @@ class LoginViewController: UIViewController, SignInViewDelegate, SignUpViewDeleg
             if check {
                 goToProfilView()
                 profilView.emailLabel.text = "Email : \(RegisterUser.instance.getEmail())"
+                showAlert(alertMessage: "Successful login")
                 print("Successful login")
                 return
             }
         }
+        showAlert(alertMessage: "Unalble to find a match with this pair of email / password")
         print("Unalble to find a match with this pair of email / password")
     }
     
@@ -89,12 +97,32 @@ class LoginViewController: UIViewController, SignInViewDelegate, SignUpViewDeleg
         if !(signUpView.emailTextBox.text?.isEmpty ?? true) && !(signUpView.passwordTextBox.text?.isEmpty ?? true) && !(signUpView.confirmPasswordTextBox.text?.isEmpty ?? true) {
             if signUpView.passwordTextBox.text == signUpView.confirmPasswordTextBox.text {
                 RegisterUser.instance.setUser(newUser: User(email: signUpView.emailTextBox.text ?? "nil", password: signUpView.passwordTextBox.text ?? "nil"))
+                showAlert(alertMessage: "Successful sign up")
                 print("Successful sign up")
                 goToLoginView()
                 return
             }
         }
+        showAlert(alertMessage: "Email or password invalid")
         print("Email or password invalid")
+    }
+    
+    func onChangePasswordPressed() {
+        if !(profilView.passwordTextBox.text?.isEmpty ?? true) && !(profilView.confirmPasswordTextBox.text?.isEmpty ?? true) {
+            if profilView.passwordTextBox.text == profilView.confirmPasswordTextBox.text {
+                RegisterUser.instance.setPassword(newPassword: profilView.passwordTextBox.text ?? "nil")
+                resetTextField(uiview: "profilView")
+                showAlert(alertMessage: "Password change is a success")
+                print("Password change is a success")
+                return
+            }
+        }
+        showAlert(alertMessage: "Password are not matching")
+        print("Password are not matching")
+    }
+    
+    func onLogoutPressed() {
+        goToLoginView()
     }
     
     func goToRegisterView() {
@@ -121,6 +149,15 @@ class LoginViewController: UIViewController, SignInViewDelegate, SignUpViewDeleg
         profilView.isHidden = false
     }
     
+    func showAlert(alertMessage:String) {
+        alertLabel.text = alertMessage
+        alertLabel.isHidden = false
+        
+        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { timer in
+            self.alertLabel.isHidden = true
+        }
+    }
+    
     func resetTextField(uiview:String) {
         if uiview == "signUpView" {
             signUpView.emailTextBox.text = ""
@@ -135,21 +172,5 @@ class LoginViewController: UIViewController, SignInViewDelegate, SignUpViewDeleg
             profilView.passwordTextBox.text = ""
             profilView.confirmPasswordTextBox.text = ""
         }
-    }
-    
-    func onChangePasswordPressed() {
-        if !(profilView.passwordTextBox.text?.isEmpty ?? true) && !(profilView.confirmPasswordTextBox.text?.isEmpty ?? true) {
-            if profilView.passwordTextBox.text == profilView.confirmPasswordTextBox.text {
-                RegisterUser.instance.setPassword(newPassword: profilView.passwordTextBox.text ?? "nil")
-                resetTextField(uiview: "profilView")
-                print("Password change is a success")
-                return
-            }
-        }
-        print("Password are not matching")
-    }
-    
-    func onLogoutPressed() {
-        goToLoginView()
     }
 }
